@@ -1,19 +1,16 @@
 {
-  "name": "websockets",
-  "version": "1.0.0",
-  "description": "testing purposes",
-  "main": "app.js",
+  "name": "currency",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "test": "test"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/antlaw0/Web-Sockets.git"
+  "dependencies": {
+    "express": "~4.14.1",
+    "express-handlebars": "~3.0.0",
+    "request": "^2.81.0"
   },
-  "author": "Anthony",
-  "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/antlaw0/Web-Sockets/issues"
-  },
-  "homepage": "https://github.com/antlaw0/Web-Sockets#readme"
+  "description": "Simple currency converter",
+  "main": "app.js",
+  "author": "Anthony"
 }

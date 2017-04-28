@@ -1,74 +1,40 @@
-window.onload = function() {
+var express = require('express');
+var exp_hbs = require('express-handlebars');
+var path = require('path');
 
-  // Get references to elements on the page.
-  var form = document.getElementById('message-form');
-  var messageField = document.getElementById('message');
-  var messagesList = document.getElementById('messages');
-  var socketStatus = document.getElementById('status');
-  var closeBtn = document.getElementById('close');
+//copied following from astropics app
+/*
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+*/
+var routes = require('./routes/index');
+var about = require('./routes/about');
 
+var app = express();
 
-  // Create a new WebSocket.
-  var socket = new WebSocket('ws://echo.websocket.org');
+app.engine('.hbs', exp_hbs({
+  extname:'.hbs',
+  defaultLayout: 'main'
+}));
 
+app.set('view engine', '.hbs');
 
-  // Handle any errors that occur.
-  socket.onerror = function(error) {
-    console.log('WebSocket Error: ' + error);
-  };
+app.use(express.static(path.join(__dirname, 'static')));
 
+//copied following from astropics app
+/*
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+*/
+app.use('/', routes);
+app.use('/about', about);
 
-  // Show a connected message when the WebSocket is opened.
-  socket.onopen = function(event) {
-    socketStatus.innerHTML = 'Connected to: ' + event.currentTarget.URL;
-    socketStatus.className = 'open';
-  };
-
-
-  // Handle messages sent by the server.
-  socket.onmessage = function(event) {
-    var message = event.data;
-    messagesList.innerHTML += '<li class="received"><span>Received:</span>' +
-                               message + '</li>';
-  };
-
-
-  // Show a disconnected message when the WebSocket is closed.
-  socket.onclose = function(event) {
-    socketStatus.innerHTML = 'Disconnected from WebSocket.';
-    socketStatus.className = 'closed';
-  };
-
-
-  // Send a message when the form is submitted.
-  form.onsubmit = function(e) {
-    e.preventDefault();
-
-    // Retrieve the message from the textarea.
-    var message = messageField.value;
-
-    // Send the message through the WebSocket.
-    socket.send(message);
-
-    // Add the message to the messages list.
-    messagesList.innerHTML += '<li class="sent"><span>Sent:</span>' + message +
-                              '</li>';
-
-    // Clear out the message field.
-    messageField.value = '';
-
-    return false;
-  };
-
-
-  // Close the WebSocket connection when the close button is clicked.
-  closeBtn.onclick = function(e) {
-    e.preventDefault();
-
-    // Close the WebSocket.
-    socket.close();
-
-    return false;
-  };
-
-};
+/*
+app.listen(process.env.PORT || 3000, function(){
+  console.log('Currency app running on port 3000');
+})
+*/
+module.exports = app;
